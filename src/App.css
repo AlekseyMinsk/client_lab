@@ -1,0 +1,26 @@
+h1 {
+    margin-top: 0;
+    font-weight: 100;
+}
+.App-background {
+    width: 500px; 
+    min-height: 300px;
+    margin: 0 auto; 
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    background-color: #d1ffff;
+    padding: 30px;
+    font-family: "Verdana";
+    font-weight: 100;
+    color: #4c4c4c;
+}
+
+.App-text-input {
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    border: 1px solid #a1a1a1;
+    padding: 10px;
+    margin-bottom: 10px;
+}
