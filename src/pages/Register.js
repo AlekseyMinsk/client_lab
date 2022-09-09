@@ -3,37 +3,13 @@ import { useState } from 'react';
 function Register() {
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
-  //const [result, setResult] = useState('');
 
   function redirectLogin() {
     window.location = '/login';
   }
 
-
   async function registerUser(event) {
     event.preventDefault();
-    // const data = JSON.stringify({
-    //   "username": name,
-    //   "password": password
-    // });
-
-    // var config = {
-    //   method: 'post',
-    //   url: 'http://localhost:5000/auth/registration',
-    //   headers: { 
-    //     'Content-Type': 'application/json'
-    //   },
-    //   data : data
-    // };
-
-    // axios(config)
-    // .then(function (response) {
-    //   debugger;
-    //   console.log(JSON.stringify(response.data));
-    // })
-    // .catch(function (error) {
-    //   console.log(error);
-    // });
     const postData = {
       "username": name,
       "password": password
@@ -46,15 +22,16 @@ function Register() {
           "Content-Type": "application/json",
           "Accept" : "*/*"
         },
-        body: JSON.stringify(postData),
+        body: JSON.stringify(postData), 
       });
       const data = await res.json();
       if(data.message) {
+        localStorage.setItem('custom_token', data.token);
         window.location = '/dashboard';
       }
       console.log(res);
-    } catch (error) {
-      console.log(error);
+    } catch (e) {
+      console.log(e);
     }
   }
 

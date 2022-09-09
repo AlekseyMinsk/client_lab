@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 const Dashboard = () => {
     //const history = useHistory();
     const [showPasswordInput, setpasswordInput] = useState(false);
-    const [showItemUpdate, setUpfateItemInput] = useState(false);
     const [newPassword, setnewPassword] = useState('');
     const [itemsArr, setItemsArr] = useState([]);
     const [newItem, setNewItem] = useState('')
@@ -12,44 +11,44 @@ const Dashboard = () => {
     const showupdatePassword = ()=> {
       setpasswordInput(showPasswordInput ? false  : true);
     }
-    const showupdateItem = () => {
-
-    }
-
     async function logout(event) {
-        event.preventDefault();
-        try {
-          const res = await fetch('https://dep-server-lab.herokuapp.com/auth/logout', {
-            method: "post",
-            credentials: 'include',
-            headers: { "Content-Type": "application/json" }
-          });
-          const data = await res.json();
-          if (data.message) {
-            window.location = '/login';
-          } else {
-            console.log("Logout error")
-          }
-        } catch (error) {
-          console.log(error);
+      event.preventDefault();
+      try {
+        const res = await fetch('https://dep-server-lab.herokuapp.com/auth/logout', {
+          method: 'post',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (data.message) {
+          localStorage.removeItem('custom_token');
+          window.location = '/login';
+        } else {
+          console.log('Logout error')
         }
-    }
+      } catch (error) {
+        console.log(error);
+      }
+   }
     async function deleteUser(event) {
       event.preventDefault();
+      const token = localStorage.getItem('custom_token');
       const postData = {
-        "username": userName
+        'username': userName
       }
       try {
         const res = await fetch('https://dep-server-lab.herokuapp.com/auth/removeuser', {
-          method: "post",
+          method: 'post',
           credentials: 'include',
           headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
           },
           body: JSON.stringify(postData),
         });
         const data = await res.json();
         if(data.message) {
+          localStorage.removeItem('custom_token');
           window.location = '/login';
         }
       } catch (error) {
@@ -58,16 +57,18 @@ const Dashboard = () => {
     }
     async function updatePassword(event) {
         event.preventDefault();
+        const token = localStorage.getItem('custom_token');
         const postData = {
-          "username": userName,
-          "newpassword": newPassword
+          'username': userName,
+          'newpassword': newPassword
         }
         try {
           const res = await fetch('https://dep-server-lab.herokuapp.com/auth/updatepassword', {
-            method: "post",
+            method: 'post',
             credentials: 'include',
             headers: {
-              "Content-Type": "application/json"
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
             },
             body: JSON.stringify(postData),
           });
@@ -81,15 +82,17 @@ const Dashboard = () => {
     }
     async function addNewItem(event) {
       event.preventDefault();
+      const token = localStorage.getItem('custom_token');
       const postData = {
         'newItem': newItem
       }
       try {
         const res = await fetch('https://dep-server-lab.herokuapp.com/auth/additem', {
-          method: "post",
+          method: 'post',
           credentials: 'include',
           headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
           },
           body: JSON.stringify(postData),
         });
@@ -103,16 +106,18 @@ const Dashboard = () => {
   }
   async function removeItem(event) {
     event.preventDefault();
+    const token = localStorage.getItem('custom_token');
     const itemToRemove = event.target.getAttribute('data-value');
     const postData = {
       'itemToRemove': itemToRemove
     }
     try {
       const res = await fetch('https://dep-server-lab.herokuapp.com/auth/removeitem', {
-        method: "post",
+        method: 'post',
         credentials: 'include',
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify(postData),
       });
@@ -122,46 +127,29 @@ const Dashboard = () => {
     } catch (error) {
       console.log(error);
     }
-}
-async function updateItem(event) {
-  event.preventDefault();
-  const postData = {
-    'newItem': newItem
   }
-  try {
-    const res = await fetch('https://dep-server-lab.herokuapp.com/auth/additem', {
-      method: "post",
-      credentials: 'include',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(postData),
-    });
-    const data = await res.json();
-    console.log(data)
-    populateQuote(false)
-  } catch (error) {
-    console.log(error);
-  }
-}
+
 
     async function populateQuote(fullUpdate) {
       try {
+        const token = localStorage.getItem('custom_token');
         const res = await fetch('https://dep-server-lab.herokuapp.com/auth/getitems', {
           method: 'get',
           credentials: 'include',
           headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
           }
         });
         const data = await res.json();
-        if(data.message === "Not authorized") {
+        console.log(data)
+        if(data.message === 'Not authorized') {
           window.location = '/login'
         }
         if(fullUpdate) {
-          setuserName(data.user.userName);
+          setuserName(data.userData.username);
         }
-        setItemsArr(data.user.items); //...oldArray,
+        setItemsArr(data.userData.list);
       } catch (error) {
         console.log(error);
       }
@@ -169,17 +157,17 @@ async function updateItem(event) {
 
     const listItems = itemsArr.map((item, index) =>
       <li key={index} className='App-li-style'>
-        <span>{item}</span>
+        <span>{item.taskCore}</span>
         <div>
-        <input 
-            type="button" 
+          <input 
+            type='button' 
             value='Delete Item' 
-            data-value={item}
+            data-value={item.id}
             onClick={removeItem}
-        />
+          />
         </div>
       </li>
-    );
+    )
 
     useEffect(() => {
       populateQuote(true)
@@ -191,21 +179,21 @@ async function updateItem(event) {
         <form onSubmit={logout}>
           <input 
             className='App-text-input'
-            type="submit" 
-            value="Logout" 
+            type='submit' 
+            value='Logout' 
           />
         </form>
         <input 
             className='App-text-input'
-            type="submit" 
-            value="Update Password" 
+            type='submit' 
+            value='Update Password' 
             onClick={showupdatePassword}
         />
         <form onSubmit={deleteUser}>
           <input 
             className='App-text-input'
-            type="submit" 
-            value="Delete User" 
+            type='submit' 
+            value='Delete User' 
           />
         </form>  
         
@@ -221,8 +209,8 @@ async function updateItem(event) {
             /> 
             <input 
               className='App-text-input'
-              type="submit" 
-              value="Update" 
+              type='submit' 
+              value='Update' 
             />
             <br />
             </form>
@@ -241,8 +229,8 @@ async function updateItem(event) {
             /> 
             <input 
               className='App-text-input'
-              type="submit" 
-              value="Add Item" 
+              type='submit' 
+              value='Add Item' 
             />
             <br />
         </form>

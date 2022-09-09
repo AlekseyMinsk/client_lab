@@ -9,44 +9,6 @@ function Login() {
     window.location = '/register';
   }
 
-  async function checkAlreadyLogin(event) {
-    event.preventDefault();
-
-    try {
-      const res = await fetch('https://dep-server-lab.herokuapp.com/auth/logout', {
-        method: "post",
-        credentials: 'include',
-        headers: {
-          "Content-Type": "application/json",
-          "Accept" : "*/*"
-        }
-      });
-
-       const data = await res.json();
-       console.log(data);
-      // if (data.user) {
-      //   localStorage.setItem('token', data.user);
-      //   console.log("Login success");
-      //   window.location = '/dashboard';
-      // } else {
-      //  console.log("Password or email is incorrect")
-      // }
-      //console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
-    // const requestOptions = {
-    //   method: 'POST',
-    //   redirect: 'follow'
-    // };
-
-    
-    // fetch("http://localhost:5000/auth/logout", requestOptions)
-    //   .then(response => response.text())
-    //   .then(result => console.log(result))
-    //   .catch(error => console.log('error', error));
-  }
-
   async function login(event) {
     event.preventDefault();
     const postData = {
@@ -66,6 +28,7 @@ function Login() {
       const data = await res.json();
 
       if (data.user) {
+        localStorage.setItem('custom_token', data.token);
         console.log("Login success");
         window.location = '/dashboard';
       } else {
@@ -102,12 +65,6 @@ function Login() {
           value="Login" 
         />
       </form> 
-      {/* <form onSubmit={checkAlreadyLogin}>
-        <input 
-          type="submit" 
-          value="IsLogged" 
-        />
-      </form> */}
       <span  onClick={redirectRegister}>If you do not have a account, please register.</span>
     </>
   );
