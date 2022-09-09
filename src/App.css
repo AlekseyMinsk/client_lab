@@ -4,6 +4,7 @@ h1 {
 }
 ul {
     list-style: none;
+    padding: 0;
 }
 .App-background {
     width: 500px; 

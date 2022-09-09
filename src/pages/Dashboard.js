@@ -151,7 +151,7 @@ const Dashboard = () => {
   const listItems = itemsArr.map((item, index) =>
     <li key={index} className='App-li-style'>
       <span>{item.taskCore}</span>
-      <div className='App-width-50'>
+      <div>
         <input 
           className='App-text-input'
           type='button' 
