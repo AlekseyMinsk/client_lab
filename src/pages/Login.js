@@ -3,7 +3,6 @@ import { useState } from 'react';
 function Login() {
   const [loginName, setloginName] = useState('');
   const [loginPassword, setloginassword] = useState('');
-  const [userName, setuserName] = useState('');
 
   function redirectRegister() {
     window.location = '/register';
@@ -29,7 +28,6 @@ function Login() {
 
       if (data.user) {
         localStorage.setItem('custom_token', data.token);
-        console.log("Login success");
         window.location = '/dashboard';
       } else {
         console.log("Password or email is incorrect")
