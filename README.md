@@ -1,6 +1,6 @@
 # Client side of the lab project
 
-Deploy is available at the link below:
+Deploy is available at the link below:\
 https://dep-client-lab.herokuapp.com
 
 ## Available Scripts
