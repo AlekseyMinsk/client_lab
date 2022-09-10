@@ -25,11 +25,13 @@ function Register() {
         body: JSON.stringify(postData), 
       });
       const data = await res.json();
-      if(data.message) {
+      if(data.message === 'User registered successfully') {
         localStorage.setItem('custom_token', data.token);
         window.location = '/dashboard';
+      } else {
+        setName('');
+        setPassword('');
       }
-      console.log(res);
     } catch (e) {
       console.log(e);
     }
@@ -61,7 +63,7 @@ function Register() {
           value="Register" 
         />
       </form>  
-      <span onClick={redirectLogin}>If you already have account, please login.</span>
+      <span className='App-cursor-button' onClick={redirectLogin}>If you already have account, please click and login.</span>
     </>
   );
 }

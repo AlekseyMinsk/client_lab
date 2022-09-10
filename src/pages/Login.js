@@ -63,7 +63,7 @@ function Login() {
           value="Login" 
         />
       </form> 
-      <span  onClick={redirectRegister}>If you do not have a account, please register.</span>
+      <span className='App-cursor-button' onClick={redirectRegister}>If you do not have a account, please click and register.</span>
     </>
   );
 }

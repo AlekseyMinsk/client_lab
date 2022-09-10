@@ -31,3 +31,6 @@ ul {
 .App-width-50 {
     width: 50%;
 }
+.App-cursor-button {
+    cursor: pointer;
+}
